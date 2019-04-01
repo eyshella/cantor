@@ -1,52 +1,96 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ChartDataSets } from 'chart.js';
-import { Label, Color } from 'ng2-charts';
-import { ChartOptions } from 'canvasjs';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChartDataSets, ChartOptions, ChartPoint } from 'chart.js';
+import { Color, Label, BaseChartDirective } from 'ng2-charts';
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  public lineChartData: ChartDataSets[] = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-  ];
-  public lineChartLabels: Label[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+  public lineChartData: ChartDataSets[] = [];
+  public lineChartLabels: Label[] = [];
   public lineChartOptions: ChartOptions = {
-    title: {
-
-    },
-    data: []
-  };
+    scales: {
+      xAxes: [{
+        type: 'linear',
+        ticks: {
+          min: -0.1,
+          max: 1.1,
+          stepSize: 0.01,
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          min: -0.1,
+          max: 1.1,
+          stepSize: 0.1,
+        }
+      }]
+    }
+  }
   public lineChartColors: Color[] = [
     {
-      borderColor: 'black',
-      backgroundColor: 'rgba(255,0,0,0.3)',
+      borderColor: 'rgb(66,12,232)',
+      backgroundColor: 'rgba(0,255,251,0.5)',
     },
   ];
-  public lineChartLegend = true;
+  public lineChartLegend = false;
   public lineChartType = 'line';
   public lineChartPlugins = [];
 
-
-
-  public points: number[] = [];
-
-  private accuracy: number = 10;
-  private numberOfPoints: number = 1000
+  private numberOfPoints: number = 5000
 
   public ngOnInit() {
+    let values: number[] = [];
     for (let i = 0; i < this.numberOfPoints; i++) {
-      let point = this.getCantor();
-
+      let value = this.getCantor();
+      values.push(value)
     }
+    values = values.sort();
+    let points: ChartPoint[] = [];
+    for (let i = 0; i < values.length; i++) {
+      const value = values[i];
+      let point: ChartPoint = {
+        x: value,
+        y: (i) / values.length,
+      }
+      points.push(point);
+    }
+    this.lineChartData.push({
+      data: points,
+      label: 'Cantor distribution',
+      pointRadius:1
+    });
   }
 
   private getCantor() {
     let rand = Math.random();
-    let randInt = Math.floor(rand * Math.pow(10, this.accuracy));
-    let randInt2Str = randInt.toString(2);
-    return Number.parseInt(randInt2Str, 3);
+    let randStr = this.convert10to2(rand);
+    randStr = randStr.split('1').join('2');
+    return this.convert3to10(randStr);
+  }
+
+  private convert10to2(v: number): string {
+    let result = '0.';
+    for (let j = 1; j <= 64; j++) {
+      let c = v - Math.pow(0.5, j)
+      if (c > 0) {
+        v = c;
+        result = result + '1'
+      } else {
+        result = result + '0';
+      }
+    }
+    return result;
+  }
+
+  private convert3to10(v: string): number {
+    let result = 0;
+    for (let i = 2; i < v.length; i++) {
+      result = result + Number.parseInt(v[i]) * Math.pow(3, -i + 1);
+    }
+    return result
   }
 }
