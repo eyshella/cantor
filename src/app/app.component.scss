@@ -1,0 +1,37 @@
+.cantor_wrapper {
+    display: flex;
+    flex-direction: row;
+
+    .cantor_plot {
+        display: block;
+        flex-basis: 800px;
+    }
+
+    .cantor-data {
+        display: flex;
+        flex-direction: column;
+
+        .cantor-data-row {
+            display: flex;
+            padding: 8px;
+
+            &_label {
+                min-width: 250px;
+                font-size: 1.5rem;
+            }
+
+            &_value {
+                font-size: 1.5rem;
+            }
+            
+
+            &_button {
+                background-color: transparent;
+                padding: 10px;
+                border: 2px solid green;
+                color: green;
+                font-size: 1.2rem;
+            }
+        }
+    }
+}

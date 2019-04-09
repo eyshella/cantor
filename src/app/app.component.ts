@@ -8,6 +8,10 @@ import { Color, Label, BaseChartDirective } from 'ng2-charts';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  public sampleMean: number = 0;
+  public sampleVariance: number = 0;
+  public sample3Moment: number = 0;
+  public sample4Moment: number = 0;
   public lineChartData: ChartDataSets[] = [];
   public lineChartLabels: Label[] = [];
   public lineChartOptions: ChartOptions = {
@@ -39,9 +43,14 @@ export class AppComponent implements OnInit {
   public lineChartType = 'line';
   public lineChartPlugins = [];
 
-  private numberOfPoints: number = 5000
+  private numberOfPoints: number = 1000
 
   public ngOnInit() {
+    this.calculate();
+  }
+
+  private calculate() {
+    this.lineChartData = [];
     let values: number[] = [];
     for (let i = 0; i < this.numberOfPoints; i++) {
       let value = this.getCantor();
@@ -60,8 +69,39 @@ export class AppComponent implements OnInit {
     this.lineChartData.push({
       data: points,
       label: 'Cantor distribution',
-      pointRadius:1
+      pointRadius: 1
     });
+    this.calculateAllStuff(values);
+  }
+
+  private calculateAllStuff(values: number[]) {
+    let sampleMean = 0;
+    values.forEach(value => {
+      sampleMean += value;
+    });
+    sampleMean /= values.length;
+    this.sampleMean = sampleMean;
+
+    let sampleVariance = 0;
+    values.forEach(value => {
+      sampleVariance += (value - sampleMean) * (value - sampleMean);
+    });
+    sampleVariance /= values.length;
+    this.sampleVariance = sampleVariance;
+
+    let sample3Moment = 0;
+    values.forEach(value => {
+      sample3Moment += (value - sampleMean) * (value - sampleMean) * (value - sampleMean);
+    });
+    sample3Moment /= values.length;
+    this.sample3Moment = sample3Moment;
+
+    let sample4Moment = 0;
+    values.forEach(value => {
+      sample4Moment += (value - sampleMean) * (value - sampleMean) * (value - sampleMean)* (value - sampleMean);
+    });
+    sample4Moment /= values.length;
+    this.sample4Moment = sample4Moment;
   }
 
   private getCantor() {

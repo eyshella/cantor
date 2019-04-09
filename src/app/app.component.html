@@ -1,10 +1,43 @@
-<div style="display: block;">
-  <canvas baseChart
-  [datasets]="lineChartData"
-  [labels]="lineChartLabels"
-  [options]="lineChartOptions"
-  [colors]="lineChartColors"
-  [legend]="lineChartLegend"
-  [chartType]="lineChartType"
-  [plugins]="lineChartPlugins"></canvas>
+<div class="cantor_wrapper">
+  <div class="cantor_plot">
+    <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors"
+      [legend]="lineChartLegend" [chartType]="lineChartType" [plugins]="lineChartPlugins"></canvas>
+  </div>
+  <div class="cantor-data">
+    <div class="cantor-data-row">
+      <div class="cantor-data-row_label">
+        Sample mean:
+      </div>
+      <div class="cantor-data-row_value">
+        {{sampleMean}}
+      </div>
+    </div>
+    <div class="cantor-data-row">
+      <div class="cantor-data-row_label">
+        Sample variance:
+      </div>
+      <div class="cantor-data-row_value">
+        {{sampleVariance}}
+      </div>
+    </div>
+    <div class="cantor-data-row">
+      <div class="cantor-data-row_label">
+        Sample 3-d moment:
+      </div>
+      <div class="cantor-data-row_value">
+        {{sample3Moment}}
+      </div>
+    </div>
+    <div class="cantor-data-row">
+      <div class="cantor-data-row_label">
+        Sample 4-d moment:
+      </div>
+      <div class="cantor-data-row_value">
+        {{sample4Moment}}
+      </div>
+    </div>
+    <div class="cantor-data-row">
+      <button class="cantor-data-row_button" (click)="calculate()">Recalculate</button>
+    </div>
+  </div>
 </div>
